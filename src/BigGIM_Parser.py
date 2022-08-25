@@ -68,11 +68,11 @@ def header_check(file_formated):
     #'predicate', 'Knowledge_source']
     #['P_value']
     
-    if "subject_id" in column_names and "subject_category" in column_names and "subject_name" in column_names and 'subject_id_prefixes' in column_names and 'object_id' in column_names and 'object_category' in column_names and 'object_name' and column_names and 'object_id_prefixes' in column_names and 'predicate' in column_names:
+    if "subject_id" in column_names and "subject_category" in column_names and "subject_name" in column_names and 'subject_id_prefix' in column_names and 'object_id' in column_names and 'object_category' in column_names and 'object_name' and column_names and 'object_id_prefix' in column_names and 'predicate' in column_names:
         format_checker = True
     else:
         format_checker = False
-        print("Need the essential components: eg. subject_id, subject_category, subject_name, subject.id prefixes, object_id, object_category, object_name, object.id prefixes,predicate")
+        print("Need the essential components: eg. subject_id, subject_category, subject_name, subject_id_prefix, object_id, object_category, object_name, object.id prefixes,predicate")
     return(format_checker)
 
     
@@ -120,8 +120,8 @@ def load_tsv_data(Filename, Date):
         for index, row in file_formated.iterrows():
             
             #standerize id prefix
-            subject_id_prefix = row['subject_id_prefixes']
-            object_id_prefix = row['object_id_prefixes']
+            subject_id_prefix = row['subject_id_prefix']
+            object_id_prefix = row['object_id_prefix']
             subject_id_prefix_columnname = '_'.join(subject_id_prefix.split('.'))
             object_id_prefix_columnname = '_'.join(object_id_prefix.split('.'))
             
@@ -147,7 +147,7 @@ def load_tsv_data(Filename, Date):
                         subject_id_prefix_columnname:subject_id,
                         "name": row["subject_name"],
                         "type": row["subject_category"], 
-                        "xref": get_xref(row['subject_id_prefixes'],raw_subject_id)
+                        "xref": get_xref(row['subject_id_prefix'],raw_subject_id)
                     }
             
             if subjects["xref"] not in validated_id:
@@ -161,7 +161,7 @@ def load_tsv_data(Filename, Date):
                         object_id_prefix_columnname:object_id,
                         "name": row["object_name"],
                         "type": row["object_category"],
-                        "xref": get_xref(row['object_id_prefixes'],raw_object_id)
+                        "xref": get_xref(row['object_id_prefix'],raw_object_id)
                         }
             
             if objects["xref"] not in validated_id:
