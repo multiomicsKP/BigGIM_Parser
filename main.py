@@ -8,9 +8,9 @@ from BigGIM_Parser import *
 
 #Datafile = "/Users/guangrong/Documents/GitHub_project/fastqpi_BigGIM/KGs/formated/gene_gene_formatted.csv"
 #TCGA_driver_mutations
-Datafile1 = "/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/Results_Graphs/TCGA_driver_mut_freq.csv"
+Datafile1 = "/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/Input_Table/TCGA_driver_mut_freq.csv"
 
-Datafile2 = "/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/Results_Graphs/FA_mut.csv"
+Datafile2 = "/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/Input_Table/FA_mut.csv"
 
 def main(verbose = False):
     counter = 0
