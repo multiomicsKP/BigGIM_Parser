@@ -6,9 +6,12 @@ import sys
 sys.path.append("/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/src/")
 from BigGIM_Parser import * 
 
+#Datafile = "/Users/guangrong/Documents/GitHub_project/fastqpi_BigGIM/KGs/formated/gene_gene_formatted.csv"
+#TCGA_driver_mutations
+Datafile = "/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/Results_Graphs/TCGA_driver_mut_freq.csv"
 def main(verbose = False):
     counter = 0
-    for row in load_tsv_data("/Users/guangrong/Documents/GitHub_project/fastqpi_BigGIM/KGs/formated/gene_gene_formatted.csv",'08/16/2022'):
+    for row in load_tsv_data(Datafile,'08/16/2022'):
         if verbose:
             print(json.dumps(row, sort_keys=True, indent=2))
         counter += 1

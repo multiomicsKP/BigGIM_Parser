@@ -49,7 +49,8 @@ def get_xref(id_prefix,id):
             'MONDO':"http://purl.obolibrary.org/obo/MONDO_",
             "CHEBI":"https://www.ebi.ac.uk/chebi/chebiOntology.do?chebiId=CHEBI:",
             "CHEMBL":"https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL",
-            "ENSEMBL":"https://uswest.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g="
+            "ENSEMBL":"https://uswest.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=",
+            "NCIT":"https://ontobee.org/ontology/NCIT?iri=http://purl.obolibrary.org/obo/NCIT_"
            }
 
     if id_prefix in dic_xref:
@@ -117,7 +118,6 @@ def load_tsv_data(Filename, Date):
 
 
         for index, row in file_formated.iterrows():
-            unique_id_list = ["Multiomics-BigGIM-DrugResponse",str(row["subject_id"]),str(row["object_id"]), row['predicate'],row['knowledge_source']]                
             
             #standerize id prefix
             subject_id_prefix = row['subject_id_prefixes']
