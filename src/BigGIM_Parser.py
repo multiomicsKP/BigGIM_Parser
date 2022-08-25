@@ -11,7 +11,8 @@ import validators
 import pandas as pd
 import numpy as np
 
-#############Part I: KG overview ####################
+
+############# Part I: KG overview ####################
 def graph_stat(G_G_KG_formated):
     num_subject_ids = len(set(G_G_KG_formated['subject_id']))
     num_object_ids = len(set(G_G_KG_formated['object_id']))
@@ -38,7 +39,7 @@ def graph_stat(G_G_KG_formated):
     print("number of unique nodes: " + str(num_unique_nodes))
     print("number of association categories: " + str(num_unique_association))
 
-#############Part II: KG parser ####################
+############# Part II: KG parser ####################
 
 def get_xref(id_prefix,id):
     
@@ -46,6 +47,9 @@ def get_xref(id_prefix,id):
             'NCBIGene':"https://www.ncbi.nlm.nih.gov/gene/",
             'Pubchem.compound': "https://pubchem.ncbi.nlm.nih.gov/compound/",
             'MONDO':"http://purl.obolibrary.org/obo/MONDO_",
+            "CHEBI":"https://www.ebi.ac.uk/chebi/chebiOntology.do?chebiId=CHEBI:",
+            "CHEMBL":"https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL",
+            "ENSEMBL":"https://uswest.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g="
            }
 
     if id_prefix in dic_xref:
@@ -71,7 +75,10 @@ def header_check(file_formated):
     return(format_checker)
 
     
-def load_tsv_data(file_formated, Date, title):
+def load_tsv_data(Filename, Date):
+    file_formated = pd.read_csv(Filename)
+    file_formated = file_formated.dropna()
+
     ## Pre-define associations
     correlation_statistic = {
         "T_test": {
@@ -110,8 +117,8 @@ def load_tsv_data(file_formated, Date, title):
 
 
         for index, row in file_formated.iterrows():
-            unique_id_list = ["Multiomics-BigGIM-DrugResponse",str(row["subject_id"]),str(row["object_id"]), row['predicate'],row['knowledge_source']]
-           
+            unique_id_list = ["Multiomics-BigGIM-DrugResponse",str(row["subject_id"]),str(row["object_id"]), row['predicate'],row['knowledge_source']]                
+            
             #standerize id prefix
             subject_id_prefix = row['subject_id_prefixes']
             object_id_prefix = row['object_id_prefixes']
@@ -119,10 +126,19 @@ def load_tsv_data(file_formated, Date, title):
             object_id_prefix_columnname = '_'.join(object_id_prefix.split('.'))
             
             # standarized ids for object and subject
-            subject_id = subject_id_prefix + ":" + str(row["subject_id"])
-            raw_subject_id = str(row["subject_id"])
-            object_id = object_id_prefix + ":" + str(row["object_id"])
-            raw_object_id = str(row["object_id"])
+            if type(row["subject_id"]) == float:
+                raw_subject_id = int(row["subject_id"])
+            else:
+                raw_subject_id = row["subject_id"]
+            subject_id = subject_id_prefix + ":" + str(raw_subject_id)
+            raw_subject_id = str(raw_subject_id)
+
+            if type(row["object_id"]) == float:
+                raw_object_id = int(row["object_id"])
+            else:
+                raw_object_id = (row["object_id"])
+
+            object_id = object_id_prefix + ":" + str(raw_object_id)
             
             # Get the dictionary of subjects, objects and associations
             
@@ -136,7 +152,7 @@ def load_tsv_data(file_formated, Date, title):
             
             if subjects["xref"] not in validated_id:
                 if validators.url(subjects["xref"]) == True:
-                    validated_id.append(validators.url(subjects["xref"]))
+                    validated_id.add(validators.url(subjects["xref"]))
                 else:
                     print(subjects["xref"] + " is not valid")
 
@@ -150,7 +166,7 @@ def load_tsv_data(file_formated, Date, title):
             
             if objects["xref"] not in validated_id:
                 if validators.url(objects["xref"]) == True:
-                    validated_id.append(validators.url(objects["xref"]))
+                    validated_id.add(validators.url(objects["xref"]))
                 else:
                     print(objects["xref"] + " is not valid. " )
 
@@ -173,8 +189,8 @@ def load_tsv_data(file_formated, Date, title):
            # edge_attributes.append({"attribute_type_id": "biolink:creation_date","value": Date})
             
             #resource_url
-            edge_attributes.append({"attribute_type_id": "biolink:supporting_study_method_description", 
-                                     "value": "https://github.com/NCATSTranslator/Translator-All/wiki/MultiomicsBigGIM_KP"})
+            #edge_attributes.append({"attribute_type_id": "biolink:supporting_study_method_description", 
+            #                         "value": "https://github.com/NCATSTranslator/Translator-All/wiki/MultiomicsBigGIM_KP"})
             
             
             #P_value
@@ -192,7 +208,6 @@ def load_tsv_data(file_formated, Date, title):
                 })
             
             
-                
             #Sample size
             if "supporting_study_size" in column_names:
                 edge_attributes.append(
@@ -357,7 +372,7 @@ def load_tsv_data(file_formated, Date, title):
                 
             json = {
                     #"_id":'-'.join(unique_id_list),
-                    "_id":title + "_"+str(Date) + "_" + str(index),
+                    "_id":subjects["type"] + "_"  + "_" +predicates + "_"+  objects["type"]+ "_" + Filename.split("/")[-1] + "_"+ str(index),
                     "subject": subjects,
                     "association": association,
                     "object": objects
