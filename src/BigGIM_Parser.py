@@ -63,8 +63,8 @@ def get_xref(id_prefix,id):
 def header_check(file_formated):
     column_names = file_formated.columns.values.tolist()
     # minumus columns: 
-    #'subject_id', 'subject_category', 'subject_name', 'subject.id prefixes', 
-    #'object_id', 'object_category', 'object_name', 'object.id prefixes', 
+    #'subject_id', 'subject_category', 'subject_name', 'subject_id_prefix', 
+    #'object_id', 'object_category', 'object_name', 'object_id_prefix', 
     #'predicate', 'Knowledge_source']
     #['P_value']
     
@@ -72,7 +72,7 @@ def header_check(file_formated):
         format_checker = True
     else:
         format_checker = False
-        print("Need the essential components: eg. subject_id, subject_category, subject_name, subject_id_prefix, object_id, object_category, object_name, object.id prefixes,predicate")
+        print("Need the essential components: eg. subject_id, subject_category, subject_name, subject_id_prefix, object_id, object_category, object_name, object_id_prefix,predicate")
     return(format_checker)
 
     
