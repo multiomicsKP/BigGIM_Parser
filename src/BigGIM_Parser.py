@@ -40,10 +40,6 @@ def graph_stat(G_G_KG_formated):
 
 #############Part II: KG parser ####################
 
-
-
-
-
 def get_xref(id_prefix,id):
     
     dic_xref = {
