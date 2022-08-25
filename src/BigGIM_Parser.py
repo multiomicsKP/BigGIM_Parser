@@ -54,7 +54,6 @@ def get_xref(id_prefix,id):
         print("id_prefix not recognized!")
         return(None)
 
-    
 
 def header_check(file_formated):
     column_names = file_formated.columns.values.tolist()
@@ -71,7 +70,7 @@ def header_check(file_formated):
         print("Need the essential components: eg. subject_id, subject_category, subject_name, subject.id prefixes, object_id, object_category, object_name, object.id prefixes,predicate")
     return(format_checker)
 
-        
+    
 def load_tsv_data(file_formated, Date, title):
     ## Pre-define associations
     correlation_statistic = {
@@ -99,13 +98,17 @@ def load_tsv_data(file_formated, Date, title):
                 "value":"NCIT:C53246",  # Pearson correlation test -- https://ontobee.org/ontology/NCIT?iri=http://purl.obolibrary.org/obo/NCIT_C53244
                 "value_type_id": "biolink:id",
         }}
-    
+
     column_names = file_formated.columns.values.tolist()
     
     format_checker = header_check(file_formated)
         
         
     if format_checker == True:
+        # ID validation
+        validated_id = set()
+
+
         for index, row in file_formated.iterrows():
             unique_id_list = ["Multiomics-BigGIM-DrugResponse",str(row["subject_id"]),str(row["object_id"]), row['predicate'],row['knowledge_source']]
            
@@ -122,23 +125,35 @@ def load_tsv_data(file_formated, Date, title):
             raw_object_id = str(row["object_id"])
             
             # Get the dictionary of subjects, objects and associations
+            
             subjects = {
                         "id": subject_id,
                         subject_id_prefix_columnname:subject_id,
                         "name": row["subject_name"],
                         "type": row["subject_category"], 
-                       # "xref": get_xref(row['subject_id_prefixes'],raw_subject_id)
+                        "xref": get_xref(row['subject_id_prefixes'],raw_subject_id)
                     }
+            
+            if subjects["xref"] not in validated_id:
+                if validators.url(subjects["xref"]) == True:
+                    validated_id.append(validators.url(subjects["xref"]))
+                else:
+                    print(subjects["xref"] + " is not valid")
 
             objects = {
                         "id": object_id,
                         object_id_prefix_columnname:object_id,
                         "name": row["object_name"],
                         "type": row["object_category"],
-                       # "xref": get_xref(row['object_id_prefixes'],raw_object_id)
+                        "xref": get_xref(row['object_id_prefixes'],raw_object_id)
                         }
             
-            
+            if objects["xref"] not in validated_id:
+                if validators.url(objects["xref"]) == True:
+                    validated_id.append(validators.url(objects["xref"]))
+                else:
+                    print(objects["xref"] + " is not valid. " )
+
             predicates = "biolink:"+'_'.join(row['predicate'].split(' '))
             
             
