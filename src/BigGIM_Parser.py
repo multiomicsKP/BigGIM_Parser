@@ -370,9 +370,25 @@ def load_tsv_data(Filename, Date):
                     "value": row['frequency_qualifier'],
                 })
                 
+            #supporting_study_cohort
+            if "supporting_study_cohort" in column_names:
+                edge_attributes.append(
+                {
+                    "attribute_type_id": "biolink:supporting_study_cohort",  # biolink version 3.0.0
+                    "value": row['supporting_study_cohort'],
+                })
+            
+            #has_count
+            if "has_count" in column_names:
+                edge_attributes.append(
+                {
+                    "attribute_type_id": "biolink:has_count",  # biolink version 3.0.0
+                    "value": row['has_count'],
+                })
+
             json = {
                     #"_id":'-'.join(unique_id_list),
-                    "_id":subjects["type"] + "_"  + "_" +predicates + "_"+  objects["type"]+ "_" + Filename.split("/")[-1] + "_"+ str(index),
+                    "_id":subjects["type"] +  "_" +predicates + "_"+  objects["type"]+ "_" + Filename.split("/")[-1] + "_"+ str(index),
                     "subject": subjects,
                     "association": association,
                     "object": objects
