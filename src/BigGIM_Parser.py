@@ -264,7 +264,13 @@ def load_tsv_data(Filename, Date):
                     #"description": "Dataset used to compute the association",
                      "value":row['Data_set'],
                     "dataset_attributes":dataset_attributes})
-            
+            # publications
+            if "publications" in column_names:
+                edge_attributes.append(
+                    {"attribute_type_id": "biolink:Publication",
+                    "value": row["publications"],
+                    }
+                )
             # knowledge graphs for extract the association
             if "knowledge_source" in column_names:
                 dataset_attributes=[] # sub-attributes should be a list per TRAPI standard
@@ -303,6 +309,22 @@ def load_tsv_data(Filename, Date):
                             "value": "http://" +row["knowledge_source"],
                            # "value_type_id": "biolink:id"
                             })
+                elif row['knowledge_source'] == "Biogrid":
+                    dataset_attributes.append(
+                        {
+                            "attribute_type_id": "biolink:source_infores",
+                          #  "description": "source infores describing association",
+                            "value": "infores:biogrid",
+                          #  "value_type_id": "biolink:id"
+                        })
+                elif row['knowledge_source'] == "HuRI":
+                    dataset_attributes.append(
+                        {
+                            "attribute_type_id": "biolink:source_infores",
+                          #  "description": "source infores describing association",
+                            "value": "infores:HuRI",
+                          #  "value_type_id": "biolink:id"
+                        })
                 elif row["knowledge_source"] == 'DrugCentral':
                     dataset_attributes.append(
                         {
