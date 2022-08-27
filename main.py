@@ -22,6 +22,9 @@ Datafile6 = "/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/Input_Table
 
 Datafile7 = "/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/Input_Table/H-I-05_formated.csv" #protein to protein
 
+Datafile8 = "/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/Input_Table/Yang-16_formated.csv" #protein to protein
+
+
 def main(verbose = False):
     counter = 0
     for row in load_tsv_data(Datafile1,'08/16/2022'):
@@ -49,6 +52,16 @@ def main(verbose = False):
         counter += 1
 
     for row in load_tsv_data(Datafile6,'08/16/2022'):
+        if verbose:
+            print(json.dumps(row, sort_keys=True, indent=2))
+        counter += 1
+    
+    for row in load_tsv_data(Datafile7,'08/16/2022'):
+        if verbose:
+            print(json.dumps(row, sort_keys=True, indent=2))
+        counter += 1
+    
+    for row in load_tsv_data(Datafile8,'08/16/2022'):
         if verbose:
             print(json.dumps(row, sort_keys=True, indent=2))
         counter += 1
