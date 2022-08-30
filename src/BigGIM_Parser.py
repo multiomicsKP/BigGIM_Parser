@@ -255,6 +255,14 @@ def load_tsv_data(Filename, Date):
                             "value": "http://" +row["Data_set"],
                            # "value_type_id": "biolink:id"
                             })
+                elif row["Data_set"] == "GTEx":
+                    dataset_attributes.append(
+                        {
+                            "attribute_type_id": "biolink:source_infores",
+                          #  "description": "source infores describing association",
+                            "value": "infores:gtex",
+                          #  "value_type_id": "biolink:id"
+                        })
                 else:
                         dataset_attributes.append({"attribute_type_id":None,
                                                  "value":row['Data_set']})
@@ -262,7 +270,7 @@ def load_tsv_data(Filename, Date):
                 edge_attributes.append(
                 {   "attribute_type_id": "biolink:Dataset",
                     #"description": "Dataset used to compute the association",
-                     "value":row['Data_set'],
+                    # "value":row['Data_set'],
                     "dataset_attributes":dataset_attributes})
             # publications
             if "publications" in column_names:
