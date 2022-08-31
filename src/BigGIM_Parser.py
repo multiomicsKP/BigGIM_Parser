@@ -230,11 +230,11 @@ def load_tsv_data(filename_path):
             
             #Datasets for extracting the knowledge graphs
             if "Data_set" in column_names:
-                dataset_attributes=[] # sub-attributes should be a list per TRAPI standard
+                attributes=[] # sub-attributes should be a list per TRAPI standard
                 if 'PMID' in row["Data_set"]:
                     new_values = row["Data_set"].split(":")
                     new_value_PMID = new_values[0].strip() + ":" +new_values[1].strip()
-                    dataset_attributes.append(
+                    attributes.append(
                         {
                             "attribute_type_id": "biolink:Publication",
                           #  "description": "Publication describing the dataset used to compute the association",
@@ -243,7 +243,7 @@ def load_tsv_data(filename_path):
                         })
                     
                 elif validators.url(row["Data_set"]) :
-                     dataset_attributes.append(
+                     attributes.append(
                             {
                             "attribute_type_id": "biolink:source_url",
                           #  "description": "source url describing the dataset used to compute the association",
@@ -251,7 +251,7 @@ def load_tsv_data(filename_path):
                           #  "value_type_id": "biolink:id"
                             })
                 elif row["Data_set"].startswith("www.") and validators.url("https://"+row["Data_set"]):
-                    dataset_attributes.append(
+                    attributes.append(
                             {
                             "attribute_type_id": "biolink:source_url",
                            # "description": "source url describing the dataset used to compute the association",
@@ -259,7 +259,7 @@ def load_tsv_data(filename_path):
                            # "value_type_id": "biolink:id"
                             })
                 elif row["Data_set"].startswith("www.") and validators.url("http://"+row["Data_set"]):
-                    dataset_attributes.append(
+                    attributes.append(
                             {
                             "attribute_type_id": "biolink:source_url",
                            # "description": "source url describing the dataset used to compute the association",
@@ -267,7 +267,7 @@ def load_tsv_data(filename_path):
                            # "value_type_id": "biolink:id"
                             })
                 elif row["Data_set"] == "GTEx":
-                    dataset_attributes.append(
+                    attributes.append(
                         {
                             "attribute_type_id": "biolink:source_infores",
                           #  "description": "source infores describing association",
@@ -275,14 +275,14 @@ def load_tsv_data(filename_path):
                           #  "value_type_id": "biolink:id"
                         })
                 else:
-                        dataset_attributes.append({"attribute_type_id":None,
+                        attributes.append({"attribute_type_id":None,
                                                  "value":row['Data_set']})
                 
                 edge_attributes.append(
                 {   "attribute_type_id": "biolink:Dataset",
                     #"description": "Dataset used to compute the association",
                     "value":row['Data_set'],
-                    "dataset_attributes":dataset_attributes})
+                    "attributes":attributes})
             # publications
             if "publications" in column_names:
                 if 'PMID' in row["publications"]:
@@ -301,12 +301,12 @@ def load_tsv_data(filename_path):
 
             # knowledge graphs for extract the association
             if "knowledge_source" in column_names:
-                dataset_attributes=[] # sub-attributes should be a list per TRAPI standard
+                attributes=[] # sub-attributes should be a list per TRAPI standard
                 if 'PMID' in row["knowledge_source"]:
                     new_values = row["knowledge_source"].split(":")
                     new_value_PMID = new_values[0].strip() + ":" +new_values[1].strip()
 
-                    dataset_attributes.append(
+                    attributes.append(
                         {
                             "attribute_type_id": "biolink:Publication",
                          #   "description": "Publication describing the association",
@@ -316,7 +316,7 @@ def load_tsv_data(filename_path):
                         )
                     
                 elif validators.url(row["knowledge_source"]) :    
-                    dataset_attributes.append(
+                    attributes.append(
                             {
                             "attribute_type_id": "biolink:source_url",
                           #  "description": "source url describing the association",
@@ -325,7 +325,7 @@ def load_tsv_data(filename_path):
                             })
                     
                 elif row["knowledge_source"].startswith("www.") and validators.url("https://"+row["knowledge_source"]):
-                    dataset_attributes.append(
+                    attributes.append(
                             {
                             "attribute_type_id": "biolink:source_url",
                            # "description": "source url describing the association",
@@ -333,7 +333,7 @@ def load_tsv_data(filename_path):
                            # "value_type_id": "biolink:id"
                             })
                 elif row["knowledge_source"].startswith("www.") and validators.url("http://"+row["knowledge_source"]):
-                    dataset_attributes.append(
+                    attributes.append(
                             {
                             "attribute_type_id": "biolink:source_url",
                            # "description": "source url describing association",
@@ -341,7 +341,7 @@ def load_tsv_data(filename_path):
                            # "value_type_id": "biolink:id"
                             })
                 elif row['knowledge_source'] == "Biogrid":
-                    dataset_attributes.append(
+                    attributes.append(
                         {
                             "attribute_type_id": "biolink:source_infores",
                           #  "description": "source infores describing association",
@@ -349,7 +349,7 @@ def load_tsv_data(filename_path):
                           #  "value_type_id": "biolink:id"
                         })
                 elif row['knowledge_source'] == "HuRI":
-                    dataset_attributes.append(
+                    attributes.append(
                         {
                             "attribute_type_id": "biolink:source_infores",
                           #  "description": "source infores describing association",
@@ -357,7 +357,7 @@ def load_tsv_data(filename_path):
                           #  "value_type_id": "biolink:id"
                         })
                 elif row["knowledge_source"] == 'DrugCentral':
-                    dataset_attributes.append(
+                    attributes.append(
                         {
                             "attribute_type_id": "biolink:source_infores",
                           #  "description": "source infores describing association",
@@ -365,7 +365,7 @@ def load_tsv_data(filename_path):
                           #  "value_type_id": "biolink:id"
                         })
                 else:
-                    dataset_attributes.append(
+                    attributes.append(
                         {
                             "attribute_type_id": None,
                             "value": row["knowledge_source"]
@@ -376,7 +376,7 @@ def load_tsv_data(filename_path):
                     "attribute_type_id": "biolink:knowledge_source",
                     "value": row['knowledge_source'],
                     #"value_type_id": None,
-                    "dataset_attributes":dataset_attributes
+                    "attributes":attributes
                 })
                                  
             #add more optional associations
