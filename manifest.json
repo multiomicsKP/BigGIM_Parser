@@ -21,12 +21,11 @@
             "https://storage.googleapis.com/multiomics_provider_kp_data/drug_response/Input_tables/GTEX_liver_negative_correlated_formated.csv",	
             "https://storage.googleapis.com/multiomics_provider_kp_data/drug_response/Input_tables/GTEX_liver_positively_correlated_formated.csv",
         ],
-        "uncompress": true,
+        "uncompress": false,
         "release": "version:get_release"
     },
     "uploader": {
-        "parser": "parser:load_data",
-        "on_duplicates": "ignore",
-        "mapping" : "mapping:custom_mapping"
+        "parser": "BigGIM_Parser:load_tsv_data",
+        "on_duplicates": "ignore"
     }
 }
