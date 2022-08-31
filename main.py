@@ -3,7 +3,7 @@
 
 import json
 import sys
-sys.path.append("/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/src/") 
+sys.path.append("./src/") 
 from BigGIM_Parser import * 
 
 def main():
