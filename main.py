@@ -37,8 +37,8 @@ def load_data(data_folder):
                         os.path.join(data_folder,"HI-II-14_formated.csv"),
                         os.path.join(data_folder,"HuRI_formated.csv"),
                         os.path.join(data_folder,"Yang-16_formated.csv"),
-                       # os.path.join(data_folder,"GTEX_liver_negative_correlated_formated.csv"),
-                       # os.path.join(data_folder,"GTEX_liver_positively_correlated_formated.csv"),
+                        os.path.join(data_folder,"GTEX_liver_negative_correlated_formated.csv"),
+                        os.path.join(data_folder,"GTEX_liver_positively_correlated_formated.csv"),
                     ]
     for filename_path in filename_paths:                
         for row in load_tsv_data(filename_path):
