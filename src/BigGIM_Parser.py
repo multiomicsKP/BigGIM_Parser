@@ -77,8 +77,8 @@ def header_check(file_formated):
     return(format_checker)
 
     
-def load_tsv_data(Filename, Date):
-    file_formated = pd.read_csv(Filename)
+def load_tsv_data(filename_path):
+    file_formated = pd.read_csv(filename_path)
     file_formated = file_formated.dropna()
 
     ## Pre-define associations
@@ -195,7 +195,7 @@ def load_tsv_data(Filename, Date):
                                     "value": "infores:biothings-multiomics-biggim-drugresponse"})
             
             #creation_date
-            edge_attributes.append({"attribute_type_id": "biolink:creation_date","value": Date})
+            #edge_attributes.append({"attribute_type_id": "biolink:creation_date","value": Date})
             
             #resource_url
             #edge_attributes.append({"attribute_type_id": "biolink:supporting_study_method_description", 
@@ -440,9 +440,11 @@ def load_tsv_data(Filename, Date):
 
             json = {
                     #"_id":'-'.join(unique_id_list),
-                    "_id":subjects["type"] +  "_" +predicates + "_"+  objects["type"]+ "_" + Filename.split("/")[-1] + "_"+ str(index),
+                    "_id":subjects["type"] +  "_" +predicates + "_"+  objects["type"]+ "_" + filename_path.split("/")[-1] + "_"+ str(index),
                     "subject": subjects,
                     "association": association,
                     "object": objects
                     }
             yield json
+
+
