@@ -46,6 +46,7 @@ def get_xref(id_prefix,id):
     dic_xref = {
             'NCBIGene':"https://www.ncbi.nlm.nih.gov/gene/",
             'Pubchem.compound': "https://pubchem.ncbi.nlm.nih.gov/compound/",
+            'PUBCHEM.COMPOUND':"https://pubchem.ncbi.nlm.nih.gov/compound/",
             'MONDO':"http://purl.obolibrary.org/obo/MONDO_",
             "CHEBI":"https://www.ebi.ac.uk/chebi/chebiOntology.do?chebiId=CHEBI:",
             "CHEMBL":"https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL",
@@ -130,7 +131,12 @@ def load_tsv_data(Filename, Date):
                 raw_subject_id = int(row["subject_id"])
             else:
                 raw_subject_id = row["subject_id"]
-            subject_id = subject_id_prefix + ":" + str(raw_subject_id)
+            
+            if subject_id_prefix == "MONDO":
+                subject_id = raw_subject_id
+            else:
+                subject_id = subject_id_prefix + ":" + str(raw_subject_id)
+
             raw_subject_id = str(raw_subject_id)
 
             if type(row["object_id"]) == float:
@@ -138,7 +144,10 @@ def load_tsv_data(Filename, Date):
             else:
                 raw_object_id = (row["object_id"])
 
-            object_id = object_id_prefix + ":" + str(raw_object_id)
+            if object_id_prefix == "MONDO":
+                object_id = raw_object_id
+            else:
+                object_id = object_id_prefix + ":" + str(raw_object_id)
             
             # Get the dictionary of subjects, objects and associations
             
@@ -186,7 +195,7 @@ def load_tsv_data(Filename, Date):
                                     "value": "infores:biothings-multiomics-biggim-drugresponse"})
             
             #creation_date
-           # edge_attributes.append({"attribute_type_id": "biolink:creation_date","value": Date})
+            edge_attributes.append({"attribute_type_id": "biolink:creation_date","value": Date})
             
             #resource_url
             #edge_attributes.append({"attribute_type_id": "biolink:supporting_study_method_description", 
@@ -223,11 +232,13 @@ def load_tsv_data(Filename, Date):
             if "Data_set" in column_names:
                 dataset_attributes=[] # sub-attributes should be a list per TRAPI standard
                 if 'PMID' in row["Data_set"]:
+                    new_values = row["Data_set"].split(":")
+                    new_value_PMID = new_values[0].strip() + ":" +new_values[1].strip()
                     dataset_attributes.append(
                         {
                             "attribute_type_id": "biolink:Publication",
                           #  "description": "Publication describing the dataset used to compute the association",
-                            "value": row["Data_set"],
+                            "value": new_value_PMID,
                           #  "value_type_id": "biolink:id"
                         })
                     
@@ -270,24 +281,36 @@ def load_tsv_data(Filename, Date):
                 edge_attributes.append(
                 {   "attribute_type_id": "biolink:Dataset",
                     #"description": "Dataset used to compute the association",
-                    # "value":row['Data_set'],
+                    "value":row['Data_set'],
                     "dataset_attributes":dataset_attributes})
             # publications
             if "publications" in column_names:
-                edge_attributes.append(
-                    {"attribute_type_id": "biolink:Publication",
-                    "value": row["publications"],
-                    }
-                )
+                if 'PMID' in row["publications"]:
+                    new_values = row["publications"].split(":")
+                    new_value_PMID = new_values[0].strip() + ":" +new_values[1].strip()
+
+                    edge_attributes.append(
+                        {"attribute_type_id": "biolink:Publication",
+                        "value": new_value_PMID,
+                        })
+                else:
+                    edge_attributes.append(
+                        {"attribute_type_id": "biolink:Publication",
+                        "value": row["publications"],
+                        })
+
             # knowledge graphs for extract the association
             if "knowledge_source" in column_names:
                 dataset_attributes=[] # sub-attributes should be a list per TRAPI standard
                 if 'PMID' in row["knowledge_source"]:
+                    new_values = row["knowledge_source"].split(":")
+                    new_value_PMID = new_values[0].strip() + ":" +new_values[1].strip()
+
                     dataset_attributes.append(
                         {
                             "attribute_type_id": "biolink:Publication",
                          #   "description": "Publication describing the association",
-                            "value": row["knowledge_source"],
+                            "value": new_value_PMID,
                          #   "value_type_id": "biolink:id"
                         }
                         )
@@ -351,14 +374,13 @@ def load_tsv_data(Filename, Date):
                 edge_attributes.append(
                 {
                     "attribute_type_id": "biolink:knowledge_source",
-                    #"value": row['knowledge_source'],
+                    "value": row['knowledge_source'],
                     #"value_type_id": None,
                     "dataset_attributes":dataset_attributes
                 })
                                  
             #add more optional associations
             # 
-
             #
             
             #Qualifiers
