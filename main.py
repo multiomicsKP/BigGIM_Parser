@@ -2,9 +2,7 @@
 #Date: 2022.08.31
 
 import json
-import sys
-sys.path.append("./src/") 
-from BigGIM_Parser import * 
+from BigGIM_Parser import load_tsv_data
 import os
 
 #def main():
