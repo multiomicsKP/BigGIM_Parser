@@ -5,6 +5,7 @@
         "licence": "CC BY 4.0",
         "url": ""
     },
+    "requires" : ["validators"],
     "dumper": {
         "data_url": [
 	        "https://storage.googleapis.com/multiomics_provider_kp_data/drug_response/Input_tables/Biogrid_formated.csv",	
