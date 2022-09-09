@@ -9,7 +9,6 @@
 
 import validators    
 import pandas as pd
-import numpy as np
 
 
 ############# Part I: KG overview ####################
@@ -30,7 +29,7 @@ def graph_stat(G_G_KG_formated):
         node_degree_list.append(len(x))
         dic_node_degree[node] = len(x)
         
-    node_degree_max = np.max(node_degree_list)
+    node_degree_max = max(node_degree_list)
         
     print("max degree: " + str(node_degree_max))
     print("num of subject ids:" + str(num_subject_ids))
