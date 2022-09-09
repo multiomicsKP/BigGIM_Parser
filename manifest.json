@@ -27,6 +27,7 @@
     },
     "uploader": {
         "parser": "BigGIM_Parser:load_data",
+        "mapping": "mapping:custom_mapping",
         "on_duplicates": "ignore"
     }
 }
