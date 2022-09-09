@@ -113,7 +113,11 @@ def load_tsv_data(filename_path):
     format_checker = header_check(file_formated)
         
         
-    if format_checker == True:
+    if format_checker == False:
+        print("Format error")
+        return
+        
+    else:
         # ID validation
         validated_id = set()
 
