@@ -263,7 +263,7 @@ def parse_edge_attributes(row, column_names):
             # statistical estimate score -- http://edamontology.org/data_0951
             "attribute_type_id": "EDAM:data_0951",
             # "description": "Confidence metric for the association",
-            "value": float(row["P_value"]),
+            "value": str(float(row["P_value"])),
             "value_type_id": "EDAM:data_1669",  # P-value -- http://edamontology.org/data_1669
             # sub-attributes should be a list per TRAPI standard
             "attributes": [CORRELATION_STATISTIC[row['statistics_method']]]
@@ -274,7 +274,7 @@ def parse_edge_attributes(row, column_names):
         edge_attributes.append({
             "attribute_type_id": "biolink:supporting_study_size",
             # "description": "The sample size used in a study that provided evidence for the association",
-            "value": int(row['supporting_study_size']),
+            "value": str(int(row['supporting_study_size'])),
         })
 
     # Datasets for extracting the knowledge graphs
@@ -286,7 +286,7 @@ def parse_edge_attributes(row, column_names):
         edge_attributes.append({
             # "description": "Dataset used to compute the association",
             "attribute_type_id": "biolink:Dataset",
-            "value": row['Data_set'],
+            "value": source,
             "attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
         })
 
@@ -319,7 +319,7 @@ def parse_edge_attributes(row, column_names):
         attribute = parse_sub_attribute(source, infores_dict)
         edge_attributes.append({
             "attribute_type_id": "biolink:knowledge_source",
-            "value": row['knowledge_source'],
+            "value": source,
             # "value_type_id": None,
             "attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
         })
