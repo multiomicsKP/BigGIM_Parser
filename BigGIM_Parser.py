@@ -232,7 +232,7 @@ def parse_sub_attribute(source, infores_dict):
         return None
 
     def _default_attribute(source):
-        return {"attribute_type_id": None, "value": source}
+        return {"attribute_type_id": "Biolink:Dataset", "value": source}
 
     # main function body starts
     # return the first non-None value
@@ -287,7 +287,7 @@ def parse_edge_attributes(row, column_names):
             # "description": "Dataset used to compute the association",
             "attribute_type_id": "biolink:Dataset",
             "value": source,
-            "attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
+            #"attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
         })
 
     # publications
