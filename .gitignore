@@ -1,5 +1,6 @@
 __pycache__
 /Input_Table
+!Input_Table/meta.csv
 .ipynb_checkpoints
 /results
 
