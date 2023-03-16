@@ -324,6 +324,27 @@ def parse_edge_attributes(row, column_names):
             "attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
         })
 
+    if "knowledge_source" in column_names:
+        source = row["knowledge_source"]
+        infores_dict = {
+            "Biogrid": "infores:biogrid",
+            "HuRI": "infores:HuRI",
+            "DrugCentral": "infores:drugcentral"
+        }
+
+        attribute = parse_sub_attribute(source, infores_dict)
+        edge_attributes.append({
+            "attribute_type_id": "biolink:primary_knowledge_source",
+            "value": source,
+            # "value_type_id": None,
+            "attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
+        })
+    else:
+        edge_attributes.append({
+            "attribute_type_id": "biolink:primary_knowledge_source",
+            "value": "infores:biothings-multiomics-biggim-drugresponse"
+        })
+
     # add more optional associations
 
     # Qualifiers
