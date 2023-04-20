@@ -555,19 +555,19 @@ def load_tsv_data(file_path):
 
 def load_data(data_folder):
     file_names = [
-       # "Input_DrugResponse_expr_auc_gdsc_08312022.csv",
-       # "Input_DrugResponse_mut_IC50_gdsc_08312022.csv",
-       # "TCGA_driver_mut_freq.csv",
-       # "FA_mut.csv",
-       # "GDSC_cancer_specific_signatures.csv",
-       # "Drug_targets_14806.csv",
-       # "Biogrid_formated.csv",
-       # "H-I-05_formated.csv",
-       # "HI-II-14_formated.csv",
-       # "HuRI_formated.csv",
+        "Input_DrugResponse_expr_auc_gdsc_08312022.csv",
+        "Input_DrugResponse_mut_IC50_gdsc_08312022.csv",
+        "TCGA_driver_mut_freq.csv",
+        "FA_mut.csv",
+        "GDSC_cancer_specific_signatures.csv",
+        "Drug_target_with_primary_source.csv",
+        "Biogrid_formated.csv",
+        "H-I-05_formated.csv",
+        "HI-II-14_formated.csv",
+        "HuRI_formated.csv",
         "Yang-16_formated.csv",
-       # "GTEX_liver_negative_correlated_formated.csv",
-       # "GTEX_liver_positively_correlated_formated.csv"
+        "GTEX_liver_negative_correlated_formated.csv",
+        "GTEX_liver_positively_correlated_formated.csv"
     ]
     file_paths = [os.path.join(data_folder, fn) for fn in file_names]
     for file_path in file_paths:
