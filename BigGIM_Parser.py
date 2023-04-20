@@ -79,6 +79,8 @@ DIC_XREF = {
     'NCBIGene': "https://www.ncbi.nlm.nih.gov/gene/",
     'Pubchem.compound': "https://pubchem.ncbi.nlm.nih.gov/compound/",
     'PUBCHEM.COMPOUND': "https://pubchem.ncbi.nlm.nih.gov/compound/",
+    'pubchem.compound': "https://pubchem.ncbi.nlm.nih.gov/compound/",
+    'pubchem.cid': "https://pubchem.ncbi.nlm.nih.gov/compound/",
     'MONDO': "http://purl.obolibrary.org/obo/MONDO_",
     "CHEBI": "https://www.ebi.ac.uk/chebi/chebiOntology.do?chebiId=CHEBI:",
     "CHEMBL": "https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL",
@@ -113,7 +115,8 @@ def header_check(file_formated):
         "object_name",
         "object_id_prefix",
 
-        "predicate"
+        "predicate",
+       # "knowledge_source"
     ]
 
     for col in essential_columns:
@@ -245,10 +248,10 @@ def parse_edge_attributes(row, column_names):
     edge_attributes = []
 
     # aggregator_knowledge_source
-    edge_attributes.append({
-        "attribute_type_id": "biolink:aggregator_knowledge_source",
-        "value": "infores:biothings-multiomics-biggim-drugresponse"
-    })
+    #edge_attributes.append({
+    #    "attribute_type_id": "biolink:aggregator_knowledge_source",
+    #    "value": "infores:biothings-multiomics-biggim-drugresponse"
+    #})
 
     # creation_date
     #edge_attributes.append({"attribute_type_id": "biolink:creation_date","value": Date})
@@ -285,7 +288,8 @@ def parse_edge_attributes(row, column_names):
         attribute = parse_sub_attribute(source, infores_dict)
         edge_attributes.append({
             # "description": "Dataset used to compute the association",
-            "attribute_type_id": "biolink:Dataset",
+            "attribute_type_id": "biolink:dataset",
+            #"attribute_type_id": "biolink:Data_source",
             "value": source,
             #"attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
         })
@@ -298,12 +302,12 @@ def parse_edge_attributes(row, column_names):
             new_value_PMID = new_values[0].strip() + ":" + new_values[1].strip()
 
             edge_attributes.append({
-                "attribute_type_id": "biolink:Publication",
+                "attribute_type_id": "biolink:publications",
                 "value": new_value_PMID,
             })
         else:
             edge_attributes.append({
-                "attribute_type_id": "biolink:Publication",
+                "attribute_type_id": "biolink:publications",
                 "value": publications,
             })
 
@@ -312,38 +316,48 @@ def parse_edge_attributes(row, column_names):
         source = row["knowledge_source"]
         infores_dict = {
             "Biogrid": "infores:biogrid",
-            "HuRI": "infores:HuRI",
-            "DrugCentral": "infores:drugcentral"
+            "HuRI": "infores:huri",
+            "DrugCentral": "infores:drugcentral",
+            "http://www.interactome-atlas.org/download": "infores:huri",
+            "TTD_2021": "infores:ttd",
+            
         }
 
         attribute = parse_sub_attribute(source, infores_dict)
-        edge_attributes.append({
-            "attribute_type_id": "biolink:knowledge_source",
-            "value": source,
-            # "value_type_id": None,
-            "attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
-        })
+        if source in infores_dict:
+            edge_attributes.append({
+                "attribute_type_id": "biolink:primary_knowledge_source",
+            # "value": source,
+                "value": infores_dict[source], 
+                # "value_type_id": None,
+                "attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
+            })
 
-    if "knowledge_source" in column_names:
-        source = row["knowledge_source"]
-        infores_dict = {
-            "Biogrid": "infores:biogrid",
-            "HuRI": "infores:HuRI",
-            "DrugCentral": "infores:drugcentral"
-        }
+            edge_attributes.append({
+                "attribute_type_id": "biolink:aggregator_knowledge_source",
+                "value": "infores:biothings-multiomics-biggim-drugresponse"
+            })
 
-        attribute = parse_sub_attribute(source, infores_dict)
-        edge_attributes.append({
-            "attribute_type_id": "biolink:primary_knowledge_source",
-            "value": source,
-            # "value_type_id": None,
-            "attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
-        })
-    else:
-        edge_attributes.append({
-            "attribute_type_id": "biolink:primary_knowledge_source",
-            "value": "infores:biothings-multiomics-biggim-drugresponse"
-        })
+        elif source == "BigGIM_DRUGRESPONSE":
+            edge_attributes.append({
+                "attribute_type_id": "biolink:primary_knowledge_source",
+                "value": "infores:biothings-multiomics-biggim-drugresponse"
+            })
+
+        elif source == "BigGIM":
+            edge_attributes.append({
+                "attribute_type_id": "biolink:primary_knowledge_source",
+                "value": "infores:biggim"
+            })
+        elif "PMID" in source:
+            edge_attributes.append({
+                "attribute_type_id": "biolink:primary_knowledge_source",
+                "value": "infores:pubmed"
+            })
+            edge_attributes.append({
+                "attribute_type_id": "biolink:publications",
+                "value": source
+            })
 
     # add more optional associations
 
@@ -399,6 +413,103 @@ def parse_edge_attributes(row, column_names):
 
     return edge_attributes
 
+def parse_source_attribute(row, column_names ):
+    source_attributes = []
+
+    infores_dict = {
+            "Biogrid": "infores:biogrid",
+            "HuRI": "infores:huri",
+            "DrugCentral": "infores:drugcentral",
+            "http://www.interactome-atlas.org/download": "infores:huri",
+            "TTD_2021": "infores:ttd",
+            "TCGA":"infores:tcga",
+            "GDSC":"infores:gdsc",
+            "GTEx":"infores:gtex"
+            }
+    
+    if "knowledge_source" in column_names:
+        source = row["knowledge_source"]
+
+
+        
+        attribute = parse_sub_attribute(source, infores_dict)
+        if source in infores_dict:
+            source_attributes.append({
+                "resource_id": infores_dict[source],
+                "resource_role": "primary_knowledge_source"
+            })
+
+            source_attributes.append({
+                "resource_id": "infores:biothings-multiomics-biggim-drugresponse",
+                "resource_role": "aggregator_knowledge_source",
+                "upstream_resource_ids": [infores_dict[source]]
+
+            })
+
+
+        elif source == "BigGIM_DRUGRESPONSE":
+            source_attributes.append({
+                "resource_id": "biolink:primary_knowledge_source",
+                "resource_role": "primary_knowledge_source"
+            })
+
+        elif source == "BigGIM":
+            source_attributes.append({
+                "resource_id": "infores:biothings-multiomics-biggim-drugresponse",
+                "resource_role": "primary_knowledge_source"
+            })
+
+        elif "PMID" in source:
+            source_attributes.append({
+                "resource_id": "infores:pubmed",
+                "resource_role": "primary_knowledge_source"
+            })
+            source_attributes.append({
+                "resource_id":  "infores:biothings-multiomics-biggim-drugresponse",
+                "resource_role": "aggregator_knowledge_source",
+                "upstream_resource_ids": source
+            })
+        else:
+            source_attributes.append({
+                "resource_id": "infores:biothings-multiomics-biggim-drugresponse",
+                "resource_role": "primary_knowledge_source"
+            })
+    else:
+        source_attributes.append({
+                "resource_id": "infores:biothings-multiomics-biggim-drugresponse",
+                "resource_role": "primary_knowledge_source"
+            })
+        if "Data_set" in column_names:
+            source = row["Data_set"]
+            
+
+            attribute = parse_sub_attribute(source, infores_dict)
+            if source in infores_dict:
+                source_attributes.append({
+                    "resource_id": infores_dict[source],
+                    "resource_role": "biolink:supporting_data_source"
+                })
+
+
+
+            elif "PMID" in source:
+                source_attributes.append({
+                    "resource_id": "infores:pubmed",
+                    "resource_role": "biolink:supporting_data_source",
+                    "resource_name": source
+                })
+
+        if "supporting_study_cohort" in column_names:
+            if row['supporting_study_cohort'] in infores_dict:
+                source_attributes.append({
+                    "resource_id": infores_dict[row['supporting_study_cohort']],
+                    "resource_role": "biolink:supporting_data_set"} ) # biolink version 3.0.0
+            else:
+                print("supporting_study_cohort not in infores_dict")
+                
+        
+
+    return(source_attributes)
 
 def load_tsv_data(file_path):
     file_formated = pd.read_csv(file_path)
@@ -421,36 +532,42 @@ def load_tsv_data(file_path):
 
         predicates = "biolink:" + '_'.join(row['predicate'].split(' '))
         edge_attributes = parse_edge_attributes(row, column_names)
+        source_attributes = parse_source_attribute(row, column_names)
+
         association_json = {
             "edge_label": predicates,
-            "edge_attributes": edge_attributes
+            "edge_attributes": edge_attributes,
+            "source_attributes": source_attributes
         }
 
         json = {
             # "_id":'-'.join(unique_id_list),
             "_id": subject_json["type"] + "_" + predicates + "_" + object_json["type"] + "_" + file_path.split("/")[-1] + "_" + str(index),
             "subject": subject_json,
-            "association": association_json,
-            "object": object_json
+            "object": object_json,
+            "predicate": association_json["edge_label"],
+            "attributes": association_json["edge_attributes"],
+            "sources": association_json["source_attributes"]  
+        
         }
         yield json
 
 
 def load_data(data_folder):
     file_names = [
-        "Input_DrugResponse_expr_auc_gdsc_08312022.csv",
-        "Input_DrugResponse_mut_IC50_gdsc_08312022.csv",
-        "TCGA_driver_mut_freq.csv",
-        "FA_mut.csv",
-        "GDSC_cancer_specific_signatures.csv",
-        "Drug_targets_14806.csv",
-        "Biogrid_formated.csv",
-        "H-I-05_formated.csv",
-        "HI-II-14_formated.csv",
-        "HuRI_formated.csv",
+       # "Input_DrugResponse_expr_auc_gdsc_08312022.csv",
+       # "Input_DrugResponse_mut_IC50_gdsc_08312022.csv",
+       # "TCGA_driver_mut_freq.csv",
+       # "FA_mut.csv",
+       # "GDSC_cancer_specific_signatures.csv",
+       # "Drug_targets_14806.csv",
+       # "Biogrid_formated.csv",
+       # "H-I-05_formated.csv",
+       # "HI-II-14_formated.csv",
+       # "HuRI_formated.csv",
         "Yang-16_formated.csv",
-        "GTEX_liver_negative_correlated_formated.csv",
-        "GTEX_liver_positively_correlated_formated.csv"
+       # "GTEX_liver_negative_correlated_formated.csv",
+       # "GTEX_liver_positively_correlated_formated.csv"
     ]
     file_paths = [os.path.join(data_folder, fn) for fn in file_names]
     for file_path in file_paths:
