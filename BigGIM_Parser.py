@@ -496,7 +496,7 @@ def parse_source_attribute(row, column_names ):
                 source_attributes.append({
                     "resource_id": "infores:pubmed",
                     "resource_role": "biolink:supporting_data_source",
-                    "resource_name": source
+                  #  "resource_name": source
                 })
 
         if "supporting_study_cohort" in column_names:
