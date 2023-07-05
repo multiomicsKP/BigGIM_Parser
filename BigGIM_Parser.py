@@ -487,7 +487,7 @@ def parse_source_attribute(row, column_names ):
             if source in infores_dict:
                 source_attributes.append({
                     "resource_id": infores_dict[source],
-                    "resource_role": "biolink:supporting_data_source"
+                    "resource_role": "supporting_data_source"
                 })
 
 
@@ -495,7 +495,7 @@ def parse_source_attribute(row, column_names ):
             elif "PMID" in source:
                 source_attributes.append({
                     "resource_id": "infores:pubmed",
-                    "resource_role": "biolink:supporting_data_source",
+                    "resource_role": "supporting_data_source",
                   #  "resource_name": source
                 })
 
@@ -503,7 +503,7 @@ def parse_source_attribute(row, column_names ):
             if row['supporting_study_cohort'] in infores_dict:
                 source_attributes.append({
                     "resource_id": infores_dict[row['supporting_study_cohort']],
-                    "resource_role": "biolink:supporting_data_set"} ) # biolink version 3.0.0
+                    "resource_role": "supporting_data_set"} ) # biolink version 3.0.0
             else:
                 print("supporting_study_cohort not in infores_dict")
                 
