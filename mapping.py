@@ -30,7 +30,7 @@ def custom_mapping(cls):
                     "normalizer": "keyword_lowercase_normalizer",
                     "type": "keyword"
                 },
-                "Pubchem_compound": {
+                "pubchem_compound": {
                     "normalizer": "keyword_lowercase_normalizer",
                     "type": "keyword"
                 },
@@ -44,12 +44,42 @@ def custom_mapping(cls):
                 }
             }
         },
-
-         "predicate": {
+        "object": {
+            "properties": {
+                "id": {
+                    "normalizer": "keyword_lowercase_normalizer",
+                    "type": "keyword"
+                },
+                "name": {
+                    "normalizer": "keyword_lowercase_normalizer",
+                    "type": "keyword"
+                },
+                "type": {
+                    "normalizer": "keyword_lowercase_normalizer",
+                    "type": "keyword"
+                },
+                "xref": {
+                    "normalizer": "keyword_lowercase_normalizer",
+                    "type": "keyword"
+                },
+                "NCBIGene": {
+                    "normalizer": "keyword_lowercase_normalizer",
+                    "type": "keyword"
+                },
+                "MONDO": {
+                    "normalizer": "keyword_lowercase_normalizer",
+                    "type": "keyword"
+                },
+                "pubchem_compound": {
+                    "normalizer": "keyword_lowercase_normalizer",
+                    "type": "keyword"
+                }
+            }
+        },
+        "predicate": {
             "normalizer": "keyword_lowercase_normalizer",
             "type": "keyword"
-            },
-
+        },
         "attributes": {
             "properties": {
                 "attribute_type_id": {
@@ -88,7 +118,6 @@ def custom_mapping(cls):
                 }
             }
         },
-
         "sources": {
             "properties": {
                 "resource_id": {
@@ -99,91 +128,7 @@ def custom_mapping(cls):
                     "normalizer": "keyword_lowercase_normalizer",
                     "type": "keyword"
                 },
-                #"resource_name": {
-                #    "normalizer": "keyword_lowercase_normalizer",
-                #    "type": "keyword"
-                #},
                 "upstream_resource_ids": {
-                    "normalizer": "keyword_lowercase_normalizer",
-                    "type": "keyword"
-                }
-            }
-        },
-        
-       # "association": {
-       #     "properties": {
-       #         "edge_label": {
-       #             "normalizer": "keyword_lowercase_normalizer",
-       #             "type": "keyword"
-       #         },
-       #         "edge_attributes": {
-       #             "properties": {
-       #                 "attribute_type_id": {
-       #                     "normalizer": "keyword_lowercase_normalizer",
-       #                     "type": "keyword"
-       #                 },
-       #                 "value_type_id": {
-       #                     "normalizer": "keyword_lowercase_normalizer",
-       #                     "type": "keyword"
-       #                 },
-       #                 "attributes": {
-       #                     "properties": {
-       #                         "attribute_type_id": {
-       #                             "normalizer": "keyword_lowercase_normalizer",
-       #                             "type": "keyword"
-       #                         },
-       #                         "value": {
-       #                             "type": "text",
-       #                             "index": False
-       #                         },
-       #                         "value_type_id": {
-       #                             "normalizer": "keyword_lowercase_normalizer",
-       #                             "type": "keyword"
-       #                         },
-       #                         "description": {
-       #                             "type": "text"
-       #                         }
-       #                     }
-       #                 },
-       #                 "attribute_source": {
-       #                     "normalizer": "keyword_lowercase_normalizer",
-       #                     "type": "keyword"
-       #                 },
-       #                 "value": {
-       #                     "type": "text",
-       #                     "index": False
-       #                 }
-       #             }
-       #         }
-       #     }
-       # },
-        "object": {
-            "properties": {
-                "id": {
-                    "normalizer": "keyword_lowercase_normalizer",
-                    "type": "keyword"
-                },
-                "name": {
-                    "normalizer": "keyword_lowercase_normalizer",
-                    "type": "keyword"
-                },
-                "type": {
-                    "normalizer": "keyword_lowercase_normalizer",
-                    "type": "keyword"
-                },
-                "xref": {
-                    "normalizer": "keyword_lowercase_normalizer",
-                    "type": "keyword"
-                },
-                "NCBIGene": {
-                    "normalizer": "keyword_lowercase_normalizer",
-                    "type": "keyword"
-                },
-                "MONDO": {
-                    "normalizer": "keyword_lowercase_normalizer",
-                    "type": "keyword"
-                },
-                "PUBCHEM_COMPOUND": {
                     "normalizer": "keyword_lowercase_normalizer",
                     "type": "keyword"
                 }

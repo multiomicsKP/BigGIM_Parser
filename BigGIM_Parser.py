@@ -39,8 +39,8 @@ def graph_stat(G_G_KG_formated):
     print("number of unique nodes: " + str(num_unique_nodes))
     print("number of association categories: " + str(num_unique_association))
 
-############# Part II: KG parser ####################
 
+############# Part II: KG parser ####################
 
 # Pre-define associations
 CORRELATION_STATISTIC = {
@@ -96,6 +96,13 @@ def get_xref(id_prefix, _id):
         print("id_prefix not recognized!")
         return None
 
+def validate_xref(validated_xrefs, xref):
+    if xref not in validated_xrefs:
+        if validators.url(xref):
+            validated_xrefs.add(xref)
+        else:
+            print(f"{xref} is not valid. ")
+
 
 def header_check(file_formated):
     file_columns = set(file_formated.columns.values.tolist())
@@ -116,7 +123,7 @@ def header_check(file_formated):
         "object_id_prefix",
 
         "predicate",
-       # "knowledge_source"
+        # "knowledge_source"
     ]
 
     for col in essential_columns:
@@ -163,18 +170,13 @@ def _parse_party(row, party):
     }
     return json
 
+
 def parse_subject(row):
     return _parse_party(row, "subject")
 
+
 def parse_object(row):
     return _parse_party(row, "object")
-
-def validate_xref(validated_xrefs, xref):
-    if xref not in validated_xrefs:
-        if validators.url(xref):
-            validated_xrefs.add(xref)
-        else:
-            print(f"{xref} is not valid. ")
 
 
 def parse_sub_attribute(source, infores_dict):
@@ -248,13 +250,13 @@ def parse_edge_attributes(row, column_names):
     edge_attributes = []
 
     # aggregator_knowledge_source
-    #edge_attributes.append({
+    # edge_attributes.append({
     #    "attribute_type_id": "biolink:aggregator_knowledge_source",
     #    "value": "infores:biothings-multiomics-biggim-drugresponse"
-    #})
+    # })
 
     # creation_date
-    #edge_attributes.append({"attribute_type_id": "biolink:creation_date","value": Date})
+    # edge_attributes.append({"attribute_type_id": "biolink:creation_date","value": Date})
 
     # resource_url
     # edge_attributes.append({"attribute_type_id": "biolink:supporting_study_method_description",
@@ -283,15 +285,15 @@ def parse_edge_attributes(row, column_names):
     # Datasets for extracting the knowledge graphs
     if "Data_set" in column_names:
         source = row["Data_set"]
-        infores_dict = {"GTEx": "infores:gtex"}
+        # infores_dict = {"GTEx": "infores:gtex"}
+        # attribute = parse_sub_attribute(source, infores_dict)
 
-        attribute = parse_sub_attribute(source, infores_dict)
         edge_attributes.append({
             # "description": "Dataset used to compute the association",
             "attribute_type_id": "biolink:dataset",
-            #"attribute_type_id": "biolink:Data_source",
+            # "attribute_type_id": "biolink:Data_source",
             "value": source,
-            #"attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
+            # "attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
         })
 
     # publications
@@ -319,15 +321,14 @@ def parse_edge_attributes(row, column_names):
             "HuRI": "infores:huri",
             "DrugCentral": "infores:drugcentral",
             "http://www.interactome-atlas.org/download": "infores:huri",
-            "TTD_2021": "infores:ttd",
-            
+            "TTD_2021": "infores:ttd"
         }
 
         attribute = parse_sub_attribute(source, infores_dict)
         if source in infores_dict:
             edge_attributes.append({
                 "attribute_type_id": "biolink:primary_knowledge_source",
-            # "value": source,
+                # "value": source,
                 "value": infores_dict[source], 
                 # "value_type_id": None,
                 "attributes": [attribute]  # sub-attributes should be a list per TRAPI standard
@@ -413,26 +414,25 @@ def parse_edge_attributes(row, column_names):
 
     return edge_attributes
 
-def parse_source_attribute(row, column_names ):
+
+def parse_source_attribute(row, column_names):
     source_attributes = []
 
     infores_dict = {
-            "Biogrid": "infores:biogrid",
-            "HuRI": "infores:huri",
-            "DrugCentral": "infores:drugcentral",
-            "http://www.interactome-atlas.org/download": "infores:huri",
-            "TTD_2021": "infores:ttd",
-            "TCGA":"infores:tcga",
-            "GDSC":"infores:gdsc",
-            "GTEx":"infores:gtex"
-            }
+        "Biogrid": "infores:biogrid",
+        "HuRI": "infores:huri",
+        "DrugCentral": "infores:drugcentral",
+        "http://www.interactome-atlas.org/download": "infores:huri",
+        "TTD_2021": "infores:ttd",
+        "TCGA": "infores:tcga",
+        "GDSC": "infores:gdsc",
+        "GTEx": "infores:gtex"
+    }
     
     if "knowledge_source" in column_names:
         source = row["knowledge_source"]
 
-
-        
-        attribute = parse_sub_attribute(source, infores_dict)
+        # attribute = parse_sub_attribute(source, infores_dict)
         if source in infores_dict:
             source_attributes.append({
                 "resource_id": infores_dict[source],
@@ -445,7 +445,6 @@ def parse_source_attribute(row, column_names ):
                 "upstream_resource_ids": [infores_dict[source]]
 
             })
-
 
         elif source == "BigGIM_DRUGRESPONSE":
             source_attributes.append({
@@ -481,16 +480,13 @@ def parse_source_attribute(row, column_names ):
             })
         if "Data_set" in column_names:
             source = row["Data_set"]
-            
+            # attribute = parse_sub_attribute(source, infores_dict)
 
-            attribute = parse_sub_attribute(source, infores_dict)
             if source in infores_dict:
                 source_attributes.append({
                     "resource_id": infores_dict[source],
                     "resource_role": "supporting_data_source"
                 })
-
-
 
             elif "PMID" in source:
                 source_attributes.append({
@@ -506,10 +502,9 @@ def parse_source_attribute(row, column_names ):
                     "resource_role": "supporting_data_set"} ) # biolink version 3.0.0
             else:
                 print("supporting_study_cohort not in infores_dict")
-                
-        
 
-    return(source_attributes)
+    return source_attributes
+
 
 def load_tsv_data(file_path):
     file_formated = pd.read_csv(file_path)
