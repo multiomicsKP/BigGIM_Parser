@@ -20,7 +20,8 @@
             "https://storage.googleapis.com/multiomics_provider_kp_data/drug_response/Input_tables/Input_DrugResponse_mut_IC50_gdsc_08312022.csv",
             "https://storage.googleapis.com/multiomics_provider_kp_data/drug_response/Input_tables/Drug_target_with_primary_source.csv",
             "https://storage.googleapis.com/multiomics_provider_kp_data/drug_response/Input_tables/GTEX_liver_negative_correlated_formated.csv",
-            "https://storage.googleapis.com/multiomics_provider_kp_data/drug_response/Input_tables/GTEX_liver_positively_correlated_formated.csv"
+            "https://storage.googleapis.com/multiomics_provider_kp_data/drug_response/Input_tables/GTEX_liver_positively_correlated_formated.csv",
+            "https://storage.googleapis.com/multiomics_provider_kp_data/drug_response/Input_tables/cellmarker.csv"
         ],
         "uncompress": false,
         "release": "version:get_release"

@@ -55,6 +55,7 @@ def Load_meta_list(data_folder):
                         os.path.join(data_folder,"Yang-16_formated.csv"),
                         os.path.join(data_folder,"GTEX_liver_negative_correlated_formated.csv"),
                         os.path.join(data_folder,"GTEX_liver_positively_correlated_formated.csv"),
+                        os.path.join(data_folder,"cellmarker.csv"),
                     ]
     for filename_path in filename_paths:
         print(filename_path)

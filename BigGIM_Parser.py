@@ -85,7 +85,8 @@ DIC_XREF = {
     "CHEBI": "https://www.ebi.ac.uk/chebi/chebiOntology.do?chebiId=CHEBI:",
     "CHEMBL": "https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL",
     "ENSEMBL": "https://uswest.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=",
-    "NCIT": "https://ontobee.org/ontology/NCIT?iri=http://purl.obolibrary.org/obo/NCIT_"
+    "NCIT": "https://ontobee.org/ontology/NCIT?iri=http://purl.obolibrary.org/obo/NCIT_",
+    "CellOntology":"https://www.ebi.ac.uk/ols4/ontologies/cl/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F"
 }
 
 
@@ -321,7 +322,8 @@ def parse_edge_attributes(row, column_names):
             "HuRI": "infores:huri",
             "DrugCentral": "infores:drugcentral",
             "http://www.interactome-atlas.org/download": "infores:huri",
-            "TTD_2021": "infores:ttd"
+            "TTD_2021": "infores:ttd",
+            "CellMarker": "infores:cellmarker2.0",
         }
 
         attribute = parse_sub_attribute(source, infores_dict)
@@ -349,6 +351,11 @@ def parse_edge_attributes(row, column_names):
             edge_attributes.append({
                 "attribute_type_id": "biolink:primary_knowledge_source",
                 "value": "infores:biggim"
+            })
+        elif source == "CellMarker":
+            edge_attributes.append({
+                "attribute_type_id": "biolink:primary_knowledge_source",
+                "value": "infores:cellmarker2.0"
             })
         elif "PMID" in source:
             edge_attributes.append({
@@ -426,7 +433,8 @@ def parse_source_attribute(row, column_names):
         "TTD_2021": "infores:ttd",
         "TCGA": "infores:tcga",
         "GDSC": "infores:gdsc",
-        "GTEx": "infores:gtex"
+        "GTEx": "infores:gtex",
+        "CellMarker": "infores:cellmarker2.0"
     }
     
     if "knowledge_source" in column_names:
@@ -457,7 +465,7 @@ def parse_source_attribute(row, column_names):
                 "resource_id": "infores:biothings-multiomics-biggim-drugresponse",
                 "resource_role": "primary_knowledge_source"
             })
-
+        
         elif "PMID" in source:
             source_attributes.append({
                 "resource_id": "infores:pubmed",

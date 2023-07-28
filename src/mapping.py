@@ -49,8 +49,10 @@ def custom_mapping(cls):
                 "MONDO":{
                      "normalizer": "keyword_lowercase_normalizer",
                     "type": "keyword"
-                }
-
+                },
+                "CellOntology":{
+                    "normalizer": "keyword_lowercase_normalizer",
+                    "type": "keyword"}
             }
         },
         "association": {
@@ -104,7 +106,10 @@ def custom_mapping(cls):
                 "MONDO":{
                      "normalizer": "keyword_lowercase_normalizer",
                     "type": "keyword"
-                }
+                },
+                "CellOntology":{
+                    "normalizer": "keyword_lowercase_normalizer",
+                    "type": "keyword"}
             }
         }
     }
