@@ -86,7 +86,7 @@ DIC_XREF = {
     "CHEMBL": "https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL",
     "ENSEMBL": "https://uswest.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=",
     "NCIT": "https://ontobee.org/ontology/NCIT?iri=http://purl.obolibrary.org/obo/NCIT_",
-    "CellOntology":"https://www.ebi.ac.uk/ols4/ontologies/cl/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F"
+    "CellOntology":"http://purl.obolibrary.org/obo/"
 }
 
 
