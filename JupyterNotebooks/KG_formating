@@ -1,0 +1,231 @@
+# Graph standarization for KGs
+# Edited on Mar7, 2023
+# Author: GQ
+
+import pandas as pd
+import math
+
+# Allowed ID prefixes
+ID_PREFIXES = ["UNIPROT","ChEBI","MONDO", "NCBIGene", "ENSEMBL", "HGNC", "MESH", "UMLS", "GO", "DRUGBANK", "PUBCHEM", "DOID", "HP", "OMIM", "ORPHANET", "EFO", "CHEBI", "CL", "UBERON", "CHEMBL.COMPOUND"]
+
+# Import the ID mapping table
+
+# Generate a dictionary for gene symbol to NCBI gene ID
+def generate_symbol2ncbi_dic():
+    ID_map = pd.read_csv("/Users/guangrong/Documents/GitHub_project/fastqpi_BigGIM/KGs/ID_convert/Table_ID_convert_9.19.2021.tsv", sep = '\t')
+    ID_map.astype(str)
+    dic_ID_symbol2ncbi ={}
+    dic_ID_ncbi2symbol = {}
+    for i in range(0,ID_map.shape[0]):
+        symbol = ID_map['Approved_symbol'][i]
+        
+        ncbi_id = ID_map['NCBI_Gene_ID'][i]
+        ensemble_id = ID_map['Ensembl_gene_ID'][i]
+        if math.isnan(ncbi_id) == False :
+            ncbi_id = int(ncbi_id)
+            if symbol not in dic_ID_symbol2ncbi:
+                dic_ID_symbol2ncbi[symbol] = ncbi_id
+            else:
+                print(symbol)
+    for i in range(0,ID_map.shape[0]):
+        alias_list = str(ID_map["Alias_symbols"][i]).split(',')
+        ncbi_id = ID_map['NCBI_Gene_ID'][i]
+        #ensemble_id = ID_map['Ensembl_gene_ID'][i]
+        if len(alias_list) > 0:
+            for alias in alias_list:
+                if alias not in dic_ID_symbol2ncbi:
+                    dic_ID_symbol2ncbi[alias] = ncbi_id
+    dic_ID_symbol2ncbi['MEN1'] = 4221
+    dic_ID_symbol2ncbi['TSC1']= 7248
+    dic_ID_symbol2ncbi['WHSC1'] = 7468
+    dic_ID_symbol2ncbi['MET'] = 4233
+    dic_ID_symbol2ncbi['HIST1H1E'] = 3008
+    dic_ID_symbol2ncbi['FLNA'] = 2316
+    dic_ID_symbol2ncbi["FAM46D"] = 169966
+    dic_ID_symbol2ncbi["HIST1H1C"] = 3006
+    dic_ID_symbol2ncbi["TNFSF10"] = 8743
+    dic_ID_symbol2ncbi["TNFSF11"] = 8600
+    dic_ID_symbol2ncbi["SPN"] = 6693
+    dic_ID_symbol2ncbi["LAT"] = 27040
+    dic_ID_symbol2ncbi['SOCS1'] = 8651
+    dic_ID_symbol2ncbi['SOCS5'] = 9655
+    dic_ID_symbol2ncbi['DRD5'] = 1816
+    dic_ID_symbol2ncbi['PTGER1'] = 5731
+    dic_ID_symbol2ncbi['MC2R'] = 4158
+    dic_ID_symbol2ncbi['SSTR1'] = 6751
+    dic_ID_symbol2ncbi['SSTR5'] = 6755
+    dic_ID_symbol2ncbi['TNFRSF12A'] = 51330
+    dic_ID_symbol2ncbi['PTPN13'] = 5783
+    dic_ID_symbol2ncbi['SV2A'] = 9900
+    dic_ID_symbol2ncbi['PDE1A'] = 5136
+    dic_ID_symbol2ncbi['GRIN2A'] = 2903
+    return(dic_ID_symbol2ncbi)
+
+def generate_uniprot2ncbi_dic():
+    ID_map = pd.read_csv("/Users/guangrong/Documents/GitHub_project/fastqpi_BigGIM/KGs/ID_convert/Table_ID_convert_9.19.2021.tsv", sep = '\t')
+    ID_map.astype(str)
+    dic_ID_uniprot2ncbi ={}
+    dic_ID_ncbi2uniprot = {}
+    for i in range(0,ID_map.shape[0]):
+        uniprot_id = ID_map['UniProtKB_ID'][i]
+        ncbi_id = ID_map['NCBI_Gene_ID'][i]
+        #ensemble_id = ID_map['Ensembl_gene_ID'][i]
+        if math.isnan(ncbi_id) == False :
+            ncbi_id = int(ncbi_id)
+            if uniprot_id not in dic_ID_uniprot2ncbi:
+                dic_ID_uniprot2ncbi[uniprot_id] = ncbi_id
+            else:
+                print(uniprot_id)
+    for i in range(0,ID_map.shape[0]):
+        alias_list = str(ID_map["Alias_symbols"][i]).split(',')
+        ncbi_id = ID_map['NCBI_Gene_ID'][i]
+        ensemble_id = ID_map['Ensembl_gene_ID'][i]
+        if len(alias_list) > 0:
+            for alias in alias_list:
+                if alias not in dic_ID_uniprot2ncbi:
+                    dic_ID_uniprot2ncbi[alias] = ncbi_id
+
+
+class graph:
+    def __init__(self, subject_id, object_id, subject_id_prefix, object_id_prefix, subject_name, object_name, predicate,Primary_Knowledge_Source, knowledge_source, publications, subject_category, object_category):
+        self.subject_id = subject_id
+        self.object_id = object_id
+        self.subject_id_prefix = subject_id_prefix
+        self.object_id_prefix = object_id_prefix
+        self.subject_name = subject_name
+        self.object_name = object_name
+        self.predicate = predicate
+        self.Primary_Knowledge_Source = Primary_Knowledge_Source
+        self.knowledge_source = knowledge_source
+        self.publications = publications
+        self.subject_category = subject_category
+        self.object_category = object_category
+
+
+# user input:
+'''
+
+
+# SIGNOR V3.0
+KGs = pd.read_csv("/Users/guangrong/Documents/GitHub_project/fastqpi_BigGIM/KGs/Signor3.0/all_data_08_03_23.tsv", sep = '\t')
+exsiting_input_graph_match = {"IDA":"subject_id", #1
+                     "IDB":"object_id", #2
+                     "TYPEA":"subject_category", #3
+                     "TYPEB":"object_category", #4
+                     "DATABASEA":"subject_id_prefix", #5
+                     "DATABASEB":"object_id_prefix", #6
+                     "ENTITYA":"subject_name", #7
+                     "ENTITYB":"object_name", #8
+                     "EFFECT":"predicate", #9
+                     "PMID":"publications" #10
+}
+non_exsiting_input_graph_match = {"Primary_Knowledge_Source":"PMID:36243968", #11
+                                  "Knowledge_Source":"Multiomics-BigGIM-DrugResponse" 
+				} #12
+				  ""
+'''
+
+# KEGG signaling pathway
+KGs = pd.read_csv("/Users/guangrong/Documents/GitHub_project/AML digital twin/script/Signaling.csv", sep = ',')
+exsiting_input_graph_match = {"Node1":"subject_name",
+                              "Node2":"object_name",
+                              "edge":"predicate",
+                              "attr":"Primary_Knowledge_Source"
+                              }
+non_exsiting_input_graph_match = {"subject_id":"", #1
+                        "object_id":"", #2
+                        "subject_id_prefix":"NCBIGene", #3
+                        "object_id_prefix":"NCBIGene", #4
+                        "subject_category":"Gene", #5
+                        "object_category":"Gene", #6
+                        "publications":"PMID:27899662", #7
+                        "Primary_Knowledge_Source":"KEGG",
+                        "Knowledge_Source":"Multiomics-BigGIM-DrugResponse" } #8
+
+
+dic_result_kg = {"subject_id":[],
+                 "object_id":[],
+                 "subject_id_prefix":[],
+                 "object_id_prefix":[],
+                 "subject_name":[],
+                 "object_name":[],
+                 "predicate":[],
+                 "Primary_Knowledge_Source":[],
+                 "Knowledge_Source":[], 
+                 "publications":[],
+                 "subject_category":[],
+                 "object_category":[]}
+
+def exclude_by_category(KGs,category1, category2):
+    index_list = []
+    for i in range(0,KGs.shape[0]):
+         
+        if (KGs['subject_category'].values[i] == category1 ) and (KGs['object_category'].values[i] == category2):
+            print(i)
+        else:
+            index_list.append(i)
+    KGs_result_remain = KGs.iloc[index_list,] 
+    return(KGs_result_remain)
+
+def main(KGs):
+    dic_ID_symbol2ncbi = generate_symbol2ncbi_dic()
+    #print(dic_ID_symbol2ncbi)
+    # Import the KGs
+    KGs.astype(str)
+    for keys in exsiting_input_graph_match:
+
+        dic_result_kg[exsiting_input_graph_match[keys]] = KGs[keys].values.tolist()
+
+    for keys in non_exsiting_input_graph_match:
+        dic_result_kg[keys] = [non_exsiting_input_graph_match[keys]]*KGs.shape[0]
+
+    ## transform dic_result_kg to dataframe
+    KGs_result = pd.DataFrame(dic_result_kg)
+    
+    KGs_result_remain = KGs_result[KGs_result['subject_id_prefix'].isin(ID_PREFIXES)]
+    KGs_result_remain = KGs_result_remain[KGs_result_remain['object_id_prefix'].isin(ID_PREFIXES)]
+
+
+    
+    '''
+    #SIGNOR v3.0
+    KGs_result_remain = exclude_by_category(KGs_result_remain, "chemical", "chemical")
+    KGs_result_remain = exclude_by_category(KGs_result_remain, "smallmolecule", "smallmolecule")
+    print(KGs_result_remain.shape)
+    KGs_result_remain.to_csv("/Users/guangrong/Documents/GitHub_project/BigGIM_Parser/input_Table/SIGNOR_formated.tsv", sep = '\t', index = False)
+    
+    '''
+
+    #KEGG
+    subject_id = []
+    import numpy as np
+    for subject in KGs_result_remain['subject_name'].values.tolist():
+        #if np.isnan(float(subject) ) == False:
+        if type(subject) == str and len(subject) > 0:
+            if subject in dic_ID_symbol2ncbi:
+            
+                subject_id.append(str(dic_ID_symbol2ncbi[subject]))
+            else:
+                print(subject)
+                subject_id.append(None)
+        else:
+            subject_id.append(None)
+    object_id = []
+    for object in KGs_result_remain['object_name'].values.tolist():
+        #print(object)
+        if type(object) == str and len(subject) > 0:
+            if object in dic_ID_symbol2ncbi:
+                object_id.append(str(dic_ID_symbol2ncbi[object]))
+            else:
+                print(object)
+                object_id.append(None)
+        else:
+            object_id.append(None)
+
+    KGs_result_remain['subject_id'] = subject_id
+    KGs_result_remain['object_id'] = object_id
+
+    KGs_result_remain.to_csv("~/Documents/GitHub_project/BigGIM_Parser/input_Table/KEGG_signaling_Mar7_2023.tsv", sep = '\t', index = False)
+    print(KGs_result_remain.shape)
+if __name__ == "__main__":
+    main(KGs)
