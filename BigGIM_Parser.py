@@ -92,7 +92,11 @@ DIC_XREF = {
 
 def get_xref(id_prefix, _id):
     if id_prefix in DIC_XREF:
-        return DIC_XREF[id_prefix] + str(_id)
+        if id_prefix == "MONDO":
+            return DIC_XREF[id_prefix] + str(_id).split(":")[1]  #MONDO ID in the table is labeled as MONDO:0019391
+        else:
+            return DIC_XREF[id_prefix] + str(_id)
+            
     else:
         print("id_prefix not recognized!")
         return None
@@ -155,7 +159,7 @@ def _parse_party(row, party):
         raw_id = int(raw_id)
     raw_id = str(raw_id)
 
-    if prefix == "MONDO":
+    if prefix == "MONDO" or prefix == "CellOntology":
         _id = raw_id
     else:
         _id = f"{prefix}:{raw_id}"
