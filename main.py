@@ -25,19 +25,19 @@ import os
 
 
 def load_data(data_folder):
-    filename_paths = [  #os.path.join(data_folder,"Input_DrugResponse_expr_auc_gdsc_08312022.csv"), #tested
-                        #os.path.join(data_folder,"Input_DrugResponse_mut_IC50_gdsc_08312022.csv"), #tested
-                        #os.path.join(data_folder,"TCGA_driver_mut_freq.csv"), #tested
-                        #os.path.join(data_folder,"FA_mut.csv"), #tested
-                        #os.path.join(data_folder,"GDSC_cancer_specific_signatures.csv"), #tested
-                        #os.path.join(data_folder,"Drug_target_with_primary_source.csv"),
-                        #os.path.join(data_folder,"Biogrid_formated.csv"), #tested
-                        #os.path.join(data_folder,"H-I-05_formated.csv"), #tested
-                        #os.path.join(data_folder,"HI-II-14_formated.csv"), #tested
-                        #os.path.join(data_folder,"HuRI_formated.csv"), #tested
-                        #os.path.join(data_folder,"Yang-16_formated.csv"),#tested
-                        #os.path.join(data_folder,"GTEX_liver_negative_correlated_formated.csv"),#tested
-                        #os.path.join(data_folder,"GTEX_liver_positively_correlated_formated.csv"), #tested
+    filename_paths = [  os.path.join(data_folder,"Input_DrugResponse_expr_auc_gdsc_08312022.csv"), #tested
+                        os.path.join(data_folder,"Input_DrugResponse_mut_IC50_gdsc_08312022.csv"), #tested
+                        os.path.join(data_folder,"TCGA_driver_mut_freq.csv"), #tested
+                        os.path.join(data_folder,"FA_mut.csv"), #tested
+                        os.path.join(data_folder,"GDSC_cancer_specific_signatures.csv"), #tested
+                        os.path.join(data_folder,"Drug_target_with_primary_source.csv"),
+                        os.path.join(data_folder,"Biogrid_formated.csv"), #tested
+                        os.path.join(data_folder,"H-I-05_formated.csv"), #tested
+                        os.path.join(data_folder,"HI-II-14_formated.csv"), #tested
+                        os.path.join(data_folder,"HuRI_formated.csv"), #tested
+                        os.path.join(data_folder,"Yang-16_formated.csv"),#tested
+                        os.path.join(data_folder,"GTEX_liver_negative_correlated_formated.csv"),#tested
+                        os.path.join(data_folder,"GTEX_liver_positively_correlated_formated.csv"), #tested
                         os.path.join(data_folder,"cellmarker.csv"), 
                     ]
     for filename_path in filename_paths:                
